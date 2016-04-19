@@ -1,12 +1,12 @@
 extern crate rand;
 
 mod hexgem;
-use hexgem::{Color,HexaGrid};
+use hexgem::{Color, HexaGrid};
 
 fn main() {
-    let mycol : Color = Color::Cyan;
+    let mycol: Color = Color::Cyan;
 
-    let grid = HexaGrid::<Color>::new(5,7);
+    let grid = HexaGrid::<Color>::new(5, 7);
 
     println!("{}", mycol);
     println!("{}", rand::random::<Color>());

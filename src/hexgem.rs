@@ -1,5 +1,5 @@
 use std::fmt;
-use rand::{Rand,Rng,random};
+use rand::{Rand, Rng, random};
 
 #[derive(Clone,Debug)]
 pub enum Color {
@@ -10,31 +10,33 @@ pub enum Color {
     Yellow,
     Purple,
     Brown,
-    Cyan
+    Cyan,
 }
 
 impl Color {
     fn get_string_representation(&self) -> &'static str {
         match *self {
             Color::Empty => "  ",
-            Color::Red   => "Re",
+            Color::Red => "Re",
             Color::Green => "Gr",
-            Color::Blue  => "Bl",
+            Color::Blue => "Bl",
             Color::Yellow => "Ye",
             Color::Purple => "Pu",
             Color::Brown => "Br",
-            Color::Cyan => "Cy"
+            Color::Cyan => "Cy",
         }
     }
 }
 
 impl Default for Color {
-    fn default() -> Color { Color::Empty }
+    fn default() -> Color {
+        Color::Empty
+    }
 }
 // TODO: There must be a more elegant way to get a random enum
 impl Rand for Color {
-    fn rand<R : Rng>(rng: &mut R) -> Self {
-        let a = rng.gen_range(1,7);
+    fn rand<R: Rng>(rng: &mut R) -> Self {
+        let a = rng.gen_range(1, 7);
         match a {
             1 => Color::Red,
             2 => Color::Green,
@@ -58,31 +60,38 @@ impl fmt::Display for Color {
 
 #[derive(Debug)]
 pub struct HexaGrid<T> {
-    width : usize,
-    heigth : usize,
-    data: Box<[T]>
+    width: usize,
+    heigth: usize,
+    data: Box<[T]>,
 }
 
 impl<T: Clone + Default + Rand> HexaGrid<T> {
-    pub fn new(w: usize,h: usize) -> HexaGrid<T> {
+    pub fn new(w: usize, h: usize) -> HexaGrid<T> {
         let flat_size = h * w + (h / 2);
-        HexaGrid::<T> { width : w, heigth : h, data : vec![<T>::default(); flat_size].into_boxed_slice()}
+        HexaGrid::<T> {
+            width: w,
+            heigth: h,
+            data: vec![<T>::default(); flat_size].into_boxed_slice(),
+        }
     }
 }
 
 impl<T: fmt::Display> fmt::Display for HexaGrid<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut res : String = "".to_string();
+        // Approxiamte capacity : (4 * (w+1)*h
+        let mut res: String = String::with_capacity("[  ]".len() * (self.width + 1) * self.heigth);
         for i in 0..self.heigth {
             let w = if (i & 1) == 0 {
-                res = format!("{}  ",res);
+                res.push_str("  ");
                 self.width
-            } else {self.width + 1};
+            } else {
+                self.width + 1
+            };
             for j in 0..w {
-                res = format!("{}[{}]",res ,self.data[j]);
+                res.push_str(format!("[{}]", self.data[j]).as_str());
             }
-            res = format!("{}\n",res);
+            res.push_str("\n");
         }
-        write!(f,"{}",res)
+        f.write_str(res.as_str())
     }
 }
