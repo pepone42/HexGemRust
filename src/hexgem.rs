@@ -1,4 +1,5 @@
 use std::fmt;
+use rand::{Rand,Rng,random};
 
 #[derive(Clone,Debug)]
 pub enum Color {
@@ -30,6 +31,22 @@ impl Color {
 impl Default for Color {
     fn default() -> Color { Color::Empty }
 }
+// TODO: There must be a more elegant way to get a random enum
+impl Rand for Color {
+    fn rand<R : Rng>(rng: &mut R) -> Self {
+        let a = rng.gen_range(1,7);
+        match a {
+            1 => Color::Red,
+            2 => Color::Green,
+            3 => Color::Blue,
+            4 => Color::Yellow,
+            5 => Color::Purple,
+            6 => Color::Brown,
+            7 => Color::Cyan,
+            _ => unreachable!(),
+        }
+    }
+}
 
 
 impl fmt::Display for Color {
@@ -46,7 +63,7 @@ pub struct HexaGrid<T> {
     data: Box<[T]>
 }
 
-impl<T: Clone + Default> HexaGrid<T> {
+impl<T: Clone + Default + Rand> HexaGrid<T> {
     pub fn new(w: usize,h: usize) -> HexaGrid<T> {
         let flat_size = h * w + (h / 2);
         HexaGrid::<T> { width : w, heigth : h, data : vec![<T>::default(); flat_size].into_boxed_slice()}
