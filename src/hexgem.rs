@@ -54,7 +54,7 @@ impl Default for Color {
 // TODO: There must be a more elegant way to get a random enum
 impl Rand for Color {
     fn rand<R: Rng>(rng: &mut R) -> Self {
-        let a = rng.gen_range(1, 7);
+        let a = rng.gen_range(1, 8);
         match a {
             1 => Color::Red,
             2 => Color::Green,
