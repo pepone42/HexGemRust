@@ -35,7 +35,7 @@ impl Color {
             Color::Cyan => "Cy",
         }
     }
-    fn random<R: Rng>(rng: &mut R, extra_color: bool) -> Color {
+    pub fn random<R: Rng>(rng: &mut R, extra_color: bool) -> Color {
         let maxcol = if extra_color == true {
             ALL_COLORS.len()
         } else {
