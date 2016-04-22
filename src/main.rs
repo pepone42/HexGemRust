@@ -21,9 +21,14 @@ fn main() {
     // println!("{:#?}", grid);
     println!("{}", grid);
 
+    // simple iter
     for i in grid.iter() {
-        println!("{}", i);
+        println!("[{}]", i);
     }
-
+    // mut iter
+    for j in grid.iter_mut() {
+        j.set_random_color(true);
+    }
+    println!("{}", grid);
     println!("Hello world !");
 }

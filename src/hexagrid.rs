@@ -5,7 +5,7 @@ use rand::{Rand, random};
 pub struct HexaGrid<T> {
     width: usize,
     heigth: usize,
-    data: Box<[T]>,
+    data: Vec<T>,
 }
 
 
@@ -27,18 +27,57 @@ impl<'a, T> Iterator for HexaGridIter<'a, T> {
     }
 }
 
-impl<T: Clone + Default> HexaGrid<T> {
+pub struct HexaGridMutIter<'a, T: 'a> {
+    data: &'a mut Vec<T>,
+    index: usize,
+}
+
+impl<'a, T> Iterator for HexaGridMutIter<'a, T> {
+    type Item = &'a mut T;
+
+    fn next<'b>(&'b mut self) -> Option<Self::Item> {
+        if self.index >= self.data.len() {
+            None
+        } else {
+            self.index += 1;
+            // TODO : See how to do it without unsafe.
+            //
+            // Original Code :
+            // Some(&mut self.data[self.index - 1])
+            // -> Error : error: cannot infer an appropriate lifetime for lifetime
+            //            parameter in function call due to conflicting requirements [E0495]
+            // Explanation here:
+            // https://m.reddit.com/r/rust/comments/4f9dxu/can_you_use_iterators_for_a_sudoku_solver/
+            // IIUC, we return an Option<Self::Item> with a lifetime 'a, the input self has a lifetime 'b
+            // Rust can't know if 'a outlive 'b
+            //
+            // unsafe method :
+            // by creating a raw pointer to our Cell, then dereference and return it 
+
+            let a = &mut self.data[self.index - 1] as *mut _;
+            Some(unsafe { &mut *a })
+        }
+    }
+}
+
+impl<'a, T: 'a + Clone + Default> HexaGrid<T> {
     pub fn new(w: usize, h: usize) -> Self {
         let flat_size = h * w + (h / 2);
         HexaGrid::<T> {
             width: w,
             heigth: h,
-            data: vec![<T>::default(); flat_size].into_boxed_slice(),
+            data: vec![<T>::default(); flat_size],
         }
     }
     pub fn iter(&self) -> HexaGridIter<T> {
         HexaGridIter::<T> {
             grid: self,
+            index: 0,
+        }
+    }
+    pub fn iter_mut(&'a mut self) -> HexaGridMutIter<T> {
+        HexaGridMutIter::<T> {
+            data: &mut self.data,
             index: 0,
         }
     }
