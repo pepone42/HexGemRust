@@ -1,5 +1,9 @@
 extern crate rand;
 
+use color::Color;
+use gem::Gem;
+use board::*;
+
 mod color;
 mod hexagrid;
 mod gem;
@@ -8,8 +12,7 @@ mod actor;
 
 
 
-use color::Color;
-use gem::Gem;
+
 
 fn main() {
     let mycol: Color = Color::Cyan;
@@ -31,4 +34,10 @@ fn main() {
     }
     println!("{}", grid);
     println!("Hello world !");
+
+
+    let b = Board::new(5, 7);
+    let a = b.grid.get(0);
+    b.randomize(true);
+    println!("{}", *a.borrow());
 }
