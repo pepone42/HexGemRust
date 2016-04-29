@@ -1,7 +1,7 @@
 use std::fmt;
 use rand::{Rand, Rng};
 
-#[derive(Clone,Debug)]
+#[derive(Clone,Debug,Copy)]
 pub enum Color {
     Empty,
     Red,

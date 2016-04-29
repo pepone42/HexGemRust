@@ -27,17 +27,24 @@ impl<'a, T> Iterator for HexaGridIter<'a, T> {
     }
 }
 
-pub struct HexaGridMutIter<'a, T: 'a> {
-    data: slice::IterMut<'a, T>,
+/// Ring iterator
+pub struct HexaGridRingInter<'a, T: 'a> {
+    grid: &'a HexaGrid<T>,
+    index: usize,
+    position: usize,
 }
 
-impl<'a, T> Iterator for HexaGridMutIter<'a, T> {
-    type Item = &'a mut T;
+// pub struct HexaGridMutIter<'a, T: 'a> {
+//     data: slice::IterMut<'a, T>,
+// }
 
-    fn next(&mut self) -> Option<Self::Item> {
-        self.data.next().map(|item| item)
-    }
-}
+// impl<'a, T> Iterator for HexaGridMutIter<'a, T> {
+//     type Item = &'a mut T;
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         self.data.next().map(|item| item)
+//     }
+// }
 
 impl<'a, T: 'a + Clone + Default> HexaGrid<T> {
     /// Create a new grid of w*h size
@@ -57,9 +64,9 @@ impl<'a, T: 'a + Clone + Default> HexaGrid<T> {
         }
     }
 
-    pub fn iter_mut(&'a mut self) -> HexaGridMutIter<T> {
-        HexaGridMutIter::<T> { data: self.data.iter_mut() }
-    }
+    // pub fn iter_mut(&'a mut self) -> HexaGridMutIter<T> {
+    //     HexaGridMutIter::<T> { data: self.data.iter_mut() }
+    // }
 
     pub fn get(&self, index: usize) -> &T {
         debug_assert!(index < self.count());
