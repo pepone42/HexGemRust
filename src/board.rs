@@ -1,4 +1,3 @@
-use std::cell::RefCell; 
 use gem::Gem;
 use hexagrid::HexaGrid;
 

@@ -29,7 +29,6 @@ impl Gem {
         self.color.get()
     }
     pub fn set_random_color(&self, extra_color: bool) {
-        //self.color = Color::random(&mut rand::thread_rng(), extra_color);
         self.set_color(Color::random(&mut rand::thread_rng(), extra_color))
     }
 }
